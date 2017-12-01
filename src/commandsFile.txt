@@ -1,0 +1,11 @@
+move-N
+move-S
+move-S
+move-S
+move-S
+move-S
+move-E
+move-E
+move-E
+move-E
+move-S
