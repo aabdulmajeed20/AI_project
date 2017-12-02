@@ -23,6 +23,7 @@ public class State {
 	private int mapY;	// map's columns
 	private int initX;	// initial X position of Robot
 	private int initY;	// initial Y position of Robot
+	private int Battery;	// The Battery for Robot
 	// -----------------------------
 
 	//THE FOLLOWING ARE THE CONSTRUCTORS
@@ -36,8 +37,9 @@ public class State {
 		
 		mapY = Integer.parseInt(read.readLine()); 	// Here we read the number of rows
 		mapX = Integer.parseInt(read.readLine());	// Here we read the number of columns
+		Battery = mapY + mapX;	// The capacity of the battery is sum of rows and columns
 		
-		map = new char[mapX][mapY];		// Here we initialise the map which is 2D array
+		map = new char[mapX][mapY];		// Here we initialize the map which is 2D array
 		
 		// Here we add data to the map
 		for(int i = 0; i < mapY; i++) {
@@ -67,7 +69,12 @@ public class State {
 		x = s.x;
 		y = s.y;
 		z = s.z;
-		// ...
+		map = s.map;
+		mapX = s.mapX;
+		mapY = s.mapY;
+		initX = s.initX;
+		initY = s.initY;
+		Battery = s.Battery;
 	}
 	
 	// -----------------------------
@@ -158,6 +165,16 @@ public class State {
 			return true;
 			
 		}
+		
+		//Action charge which will increase battery of Robot
+		public boolean reCharge() {
+			if(map[x][y] == 'C') {				// if Robot on the station then charge will done
+				Battery = mapX + mapY;
+				return true;
+			}
+			Battery--;								// if charge used in wrong place will decrease the battery
+			return false;	
+		}
 	
 
 
@@ -183,39 +200,50 @@ public class State {
 	
 	// THIS METHOD WILL DO the GIVEN COMMAND
 	// AND WILL RETURN THE LOG MESSAGE
-	public String doCommandAndLog(String cmd) {		// Here we will move on every command and do its action, then we check
-													// if the action returns true then log DONE
-													// else if the action returns false then log FAIL
-		String log="ERROR";
-		switch (cmd) {
-		case "move-N":
-			if(move_N()) 
-				log = "DONE";
-			else
-				log = "FAIL";
-			
-			break;
-			
-		case "move-E":
-			if(move_E())
-				log = "DONE";
-			else
-				log = "FAIL";
-			break;
-			
-		case "move-S":
-			if(move_S())
-				log = "DONE";
-			else
-				log = "FAIL";
-			break;
-			
-		case "move-W":
-			if(move_W())	
-				log = "DONE";
-			else
-				log = "FAIL";
-			break;
+	public String doCommandAndLog(String cmd) { // Here we will move on every command and do its action, then we check
+												// if the action returns true then log DONE
+												// else if the action returns false then log FAIL
+		String log = "ERROR";
+		if (Battery <= 0)
+			log = "NO BATTERY";
+		else {
+			switch (cmd) {
+			case "move-N":
+				if (move_N())
+					log = "DONE";
+				else
+					log = "FAIL";
+
+				break;
+
+			case "move-E":
+				if (move_E())
+					log = "DONE";
+				else
+					log = "FAIL";
+				break;
+
+			case "move-S":
+				if (move_S())
+					log = "DONE";
+				else
+					log = "FAIL";
+				break;
+
+			case "move-W":
+				if (move_W())
+					log = "DONE";
+				else
+					log = "FAIL";
+				break;
+
+			case "charge":
+				if (reCharge())
+					log = "DONE";
+				else
+					log = "FAIL";
+				break;
+			}
 		}
 		return log;
 	}
@@ -249,6 +277,7 @@ public class State {
 				
 			writer.newLine();
 		}
+		writer.append("BATTERY: " + Battery);			// show battery remaining
 		writer.close();
 		read.close();
 	}
@@ -280,27 +309,27 @@ public class State {
  	// THIS METHOD WILL RETURN THE SUCCESSOR STATES 
 	// OF COURSE, YOU CAN & SHOULD CHANGE IT
         public State[] successors() {
-        	State children[] = new State[4]; // we have 2 actions
+        	State children[] = new State[4]; // we have 4 actions
 		
-		// action 1		
+		// action 1: move to North		
 
 		children[0] = new State(this);
 		if (!children[0].move_N())
 			children[0] = null;
 
-		// action 2
+		// action 2: move to East
 
 		children[1] = new State(this);
 		if (!children[1].move_E())
 			children[1] = null;
 		
-		// action 3
+		// action 3: move to South
 		
 		children[2] = new State(this);
 		if (!children[2].move_S())
 			children[2] = null;
 		
-		// action 4
+		// action 4: move to West
 		
 		children[3] = new State(this);
 		if (!children[3].move_W())
