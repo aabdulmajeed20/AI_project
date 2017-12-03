@@ -63,7 +63,7 @@ public class Search {
 	private boolean visited(Node n) {
 		for (int i=0; i<n_closed; i++) {
 			// ...
-			if ( true )  // change this
+			if (closed[i].equals(n))  // change this
 				return true;
 		}
 		return false;
@@ -101,11 +101,17 @@ public class Search {
 			if (current.isGoal()) {
 				return current;	
 			}
+			mark_as_visited(current);
 			nodesList = current.expand();
 			numNodesExpanded++;			
 			for (int i=0; i<5; i++) {	// we have 5 actions
 				// ...
-				if (nodesList[i]!=null){}	//here some code ----------------------------------------------------------
+				if (nodesList[i]!=null){
+					if(!visited(nodesList[i])){
+						fringe.add(current = nodesList[i]);
+						
+					}
+				}
 					// ...
 			}			
 		}
@@ -135,11 +141,11 @@ public class Search {
 			switch (n.getAction()) {
 				case 0: sol[i] = new String("move-N");
 					break;
-				case 1: sol[i] = new String("move-S");
+				case 1: sol[i] = new String("move-E");
 					break;
-				case 2: sol[i] = new String("move-W");
+				case 2: sol[i] = new String("move-S");
 					break;
-				case 3: sol[i] = new String("move-E");
+				case 3: sol[i] = new String("move-W");
 					break;
 				case 4: sol[i] = new String("recharge");
 			}

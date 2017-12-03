@@ -23,7 +23,10 @@ public class State {
 	private int mapY;	// map's columns
 	private int initX;	// initial X position of Robot
 	private int initY;	// initial Y position of Robot
+	private int initGoalX;
+	private int initGoalY;
 	private int Battery;	// The Battery for Robot
+	public int actionLeads;	// The number of action leads to this state
 	// -----------------------------
 
 	//THE FOLLOWING ARE THE CONSTRUCTORS
@@ -40,6 +43,7 @@ public class State {
 		Battery = mapY + mapX;	// The capacity of the battery is sum of rows and columns
 		
 		map = new char[mapX][mapY];		// Here we initialize the map which is 2D array
+		actionLeads = -1;
 		
 		// Here we add data to the map
 		for(int i = 0; i < mapY; i++) {
@@ -48,6 +52,10 @@ public class State {
 				if(s.charAt(j) == 'R') {		// search about the robot cell by cell then store its position
 					initX = x = j;
 					initY = y = i;
+				}
+				if(s.charAt(j) == 'T') {		// search about the robot cell by cell then store its position
+					initGoalX = j;
+					initGoalY = i;
 				}
 				map[j][i] = s.charAt(j);
 			}
@@ -74,6 +82,8 @@ public class State {
 		mapY = s.mapY;
 		initX = s.initX;
 		initY = s.initY;
+		initGoalX = s.initGoalX;
+		initGoalY = s.initGoalY;
 		Battery = s.Battery;
 	}
 	
@@ -237,7 +247,7 @@ public class State {
 					log = "FAIL";
 				break;
 
-			case "charge":
+			case "recharge":
 				if (reCharge())
 					log = "DONE";
 				else
@@ -309,37 +319,69 @@ public class State {
  	// THIS METHOD WILL RETURN THE SUCCESSOR STATES 
 	// OF COURSE, YOU CAN & SHOULD CHANGE IT
         public State[] successors() {
-        	State children[] = new State[4]; // we have 4 actions
+        	State children[] = new State[5]; // we have 5 actions
 		
 		// action 1: move to North		
 
 		children[0] = new State(this);
 		if (!children[0].move_N())
 			children[0] = null;
+		else{
+			children[0].actionLeads = 0;
+		}
 
 		// action 2: move to East
 
 		children[1] = new State(this);
 		if (!children[1].move_E())
 			children[1] = null;
+		else{
+			children[1].actionLeads = 1;
+		}
 		
 		// action 3: move to South
 		
 		children[2] = new State(this);
 		if (!children[2].move_S())
 			children[2] = null;
+		else{
+			children[2].actionLeads = 2;
+		}
 		
 		// action 4: move to West
 		
 		children[3] = new State(this);
 		if (!children[3].move_W())
 			children[3] = null;
+		else{
+			children[3].actionLeads = 3;
+		}
+		
+		// action 5: reCharge
+		
+		children[4] = new State(this);
+		if (!children[4].reCharge())
+			children[4] = null;
+		else{
+			children[4].actionLeads = 4;
+		}
 		
         	return children;
         }
         
        	// -----------------------------
 
-	// ADD EXTRAS HERE ...
+	public int getInitX() {
+		return initX;
+	}
+	public int getInitY() {
+		return initY;
+	}
+	public int getInitGoalX() {
+		return initGoalX;
+	}
+	public int getInitGoalY() {
+		return initGoalY;
+	}
 		
 }

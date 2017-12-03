@@ -39,7 +39,9 @@ class Node{
 		Node next_nodes[] = new Node[5];	// there are 5 actions
 		State next_states[] = state.successors();
 		for (int i=0; i<5; i++) {		// create nodes
-			if (next_states[i]!=null){}
+			if (next_states[i]!=null){
+				next_nodes[i] = new Node(next_states[i], this, next_states[i].actionLeads, path_cost++, this.depth + 1);
+			}
 			
 				// ...
 				
@@ -55,10 +57,8 @@ class Node{
 	
 	// MANHATTAN DISTANCE HEURISTIC
 	public int h_md() {
-	
-		// ...
 		
-		return 0;
+		return Math.abs(state.getInitX() - state.getInitGoalX()) + Math.abs(state.getInitY() - state.getInitGoalY());
 	}
 	
 	// DISPLAY THE NODE'S INFO
