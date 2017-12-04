@@ -93,6 +93,7 @@ public class Search {
 		numNodesExpanded = 0;
 		Node nodesList[];
 		Node current = root;
+		initialize_closed();
 	
 		fringe.add(current);		
 		while (!fringe.isEmpty()) {
