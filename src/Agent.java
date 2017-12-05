@@ -44,7 +44,11 @@ public class Agent {
 			String actionsFile = args[3];
 			String finalMapFile = args[4];
 			
-			// ... phase 2 code here ...
+			State S = new State(MapFile);
+			
+			S.writeActionsFile(actionsFile, S);
+			
+			S.writeFinalMap(finalMapFile);
 			
 		}
 

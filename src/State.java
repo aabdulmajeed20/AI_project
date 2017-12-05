@@ -126,6 +126,8 @@ public class State {
 	//     TRUE MEANS ACTION WAS APPLIED, 
 	//     FALSE MEANS ACTOIN COULD NOT AND WAS NOT APPLIED.
 	public boolean move_N() {
+		if(Battery <= 0)
+			return false;
 		if(y == 0)						// checking if Robot is on the top of the map and return false if that correct
 			return false;
 		if(map[x][y-1] == 'B')		// checking if the above cell is block cell
@@ -133,12 +135,15 @@ public class State {
 		if(map[x][y] == 'H')		// checking if Robot fallen in Hole
 			return false;
 		y--;							// if the above conditions not pass, moving Robot up and return true
+		Battery--;
 		return true;
 		
 	}
 
 	// ACTION move East, it's moves the robot to the East
-	public boolean move_E() {		
+	public boolean move_E() {	
+		if(Battery <= 0)
+			return false;
 		if(x == mapX-1)
 			return false;
 		if(map[x+1][y] == 'B')					// Same of move_N
@@ -146,12 +151,15 @@ public class State {
 		if(map[x][y] == 'H')
 			return false;
 		x++;
+		Battery--;
 		return true;
 		
 	}
 	
 	// ACTION move South, it's moves the robot to the South
 		public boolean move_S() {
+			if(Battery <= 0)
+				return false;
 			if(y == mapY-1)
 				return false;
 			if(map[x][y+1] == 'B')				// Same of move_N
@@ -159,12 +167,15 @@ public class State {
 			if(map[x][y] == 'H')
 				return false;
 			y++;
+			Battery--;
 			return true;
 			
 		}
 		
 		// ACTION move West, it's moves the robot to the West
 		public boolean move_W() {
+			if(Battery <= 0)
+				return false;
 			if(x == 0)
 				return false;
 			if(map[x-1][y] == 'B')				// Same of move_N
@@ -172,6 +183,7 @@ public class State {
 			if(map[x][y] == 'H')
 				return false;
 			x--;
+			Battery--;
 			return true;
 			
 		}
@@ -310,6 +322,11 @@ public class State {
 			writer.newLine();
 		}
 		writer.close();
+	}
+	
+	public void writeActionsFile(String actionsFile, State init) throws IOException{
+		Search search = new Search(init);
+		search.displaySolution(search.doSearch());
 	}
 
 	
