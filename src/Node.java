@@ -9,11 +9,11 @@ import java.io.*;
 import java.util.*;
 
 class Node{
-	private State state;	// the state
+	public State state;	// the state
 	private Node parent;	// the parent node
 	private int action;	// the number of the action 
 				// that lead to this state
-	private int path_cost;	// the cost spent so far to reach this node
+	public int path_cost;	// the cost spent so far to reach this node
 	private int depth;	// the depth of the node in the tree
 	
 	// CONSTRUCTOR :

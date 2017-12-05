@@ -150,15 +150,18 @@ public class Search {
 					break;
 				case 4: sol[i] = new String("recharge");
 			}
+			
 			n = n.getParent();
 		}
 		return sol;		
 	}
 	
 	// THIS METHOD WILL DISPLAY THE SOLUTION
-	public void displaySolution(Node goalNode) {
+	public void displaySolution(Node goalNode, State s) {
 		String sol[] = extractSolution(goalNode);
-		for (int i=0; i<sol.length; i++) 
+		for (int i=0; i<sol.length; i++){
+			s.doCommandAndLog(sol[i]);
 			System.out.println(sol[i]);
+		}
 	}
 }

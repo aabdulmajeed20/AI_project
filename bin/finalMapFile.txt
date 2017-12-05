@@ -1,6 +1,7 @@
  BHB B
- B    
+ B   C
  B B B
    B H
  BBB B
-  XB T
+C HB U
+Robot Position -> (5, 5)

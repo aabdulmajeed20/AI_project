@@ -25,8 +25,9 @@ public class State {
 	private int initY;	// initial Y position of Robot
 	private int initGoalX;
 	private int initGoalY;
-	private int Battery;	// The Battery for Robot
+	public int Battery;	// The Battery for Robot
 	public int actionLeads;	// The number of action leads to this state
+	public Node GoalNode;
 	// -----------------------------
 
 	//THE FOLLOWING ARE THE CONSTRUCTORS
@@ -306,6 +307,7 @@ public class State {
 	
 	// This method will write the final map into finalMapFile
 	public void writeFinalMap(String finalMapFile) throws IOException {
+		if(map[x][y] != map[initX][initY])
 		map[initX][initY] = ' ';		// Make the initial Robot position empty because it moves
 		if(foundTreasure())			// checking if Robot at the same cell of Treasure, then change the value
 			map[x][y] = 'U';
@@ -313,6 +315,8 @@ public class State {
 			map[x][y] = 'X';
 		else if(map[x][y] == 'Y')
 			map[x][y] = 'Z';
+		else if(map[x][y] == 'C')
+			map[x][y] = 'D';
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(finalMapFile)); //buffer to write into finalMapFile
 		for(int i = 0; i<mapY; i++) {
@@ -321,12 +325,12 @@ public class State {
 			}
 			writer.newLine();
 		}
+		writer.append("Robot Position -> (" + x + ", " + y + ")");
 		writer.close();
 	}
 	
 	public void writeActionsFile(String actionsFile, State init) throws IOException{
-		Search search = new Search(init);
-		search.displaySolution(search.doSearch());
+		
 	}
 
 	

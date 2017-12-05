@@ -46,7 +46,8 @@ public class Agent {
 			
 			State S = new State(MapFile);
 			
-			S.writeActionsFile(actionsFile, S);
+			Search search = new Search(S);
+			search.displaySolution(search.doSearch(), S);
 			
 			S.writeFinalMap(finalMapFile);
 			
