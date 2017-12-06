@@ -157,11 +157,21 @@ public class Search {
 	}
 	
 	// THIS METHOD WILL DISPLAY THE SOLUTION
-	public void displaySolution(Node goalNode, State s) {
+	public void displaySolution(Node goalNode, State s, String actionsFile) throws IOException {
+		BufferedWriter writer = new BufferedWriter(new FileWriter(actionsFile));
+		
+		if(goalNode == null){
+			System.out.println("NOOP");
+			writer.append("NOOP");
+		} else{
 		String sol[] = extractSolution(goalNode);
 		for (int i=0; i<sol.length; i++){
+			writer.append(sol[i]);
+			writer.newLine();
 			s.doCommandAndLog(sol[i]);
 			System.out.println(sol[i]);
 		}
+		}
+		writer.close();
 	}
 }
