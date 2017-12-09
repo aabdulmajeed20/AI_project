@@ -5,6 +5,7 @@
 // NAME:  Abdulmajeed Fahad Altaweel
 // ID: 435105646
 
+import java.awt.Point;
 import java.io.*;
 import java.util.*;
 
@@ -14,20 +15,22 @@ public class State {
 	// THAT YOU NEED TO PUT IN A STATE.
 	// YOU SHOULD CHANGE IT:
 	
-	private int x;		// THIS IS X (MAYBE NOT NEEDED)
-	private int y;		// THIS IS Y (MAYBE NOT NEEDED)
+	public int x;		// THIS IS X (MAYBE NOT NEEDED)
+	public int y;		// THIS IS Y (MAYBE NOT NEEDED)
 	private int z; 		// THIS IS Z (MAYBE NOT NEEDED)
 //	private Map map;	// THE MAP
-	private char[][] map;	// define the map
-	private int mapX;	// map's rows
-	private int mapY;	// map's columns
+	public char[][] map;	// define the map
+	public int mapX;	// map's rows
+	public int mapY;	// map's columns
 	private int initX;	// initial X position of Robot
 	private int initY;	// initial Y position of Robot
 	private int initGoalX;
 	private int initGoalY;
+	private Point[] Goals;
 	public int Battery;	// The Battery for Robot
 	public int actionLeads;	// The number of action leads to this state
 	public Node GoalNode;
+	public int reCharged;
 	// -----------------------------
 
 	//THE FOLLOWING ARE THE CONSTRUCTORS
@@ -42,6 +45,8 @@ public class State {
 		mapY = Integer.parseInt(read.readLine()); 	// Here we read the number of rows
 		mapX = Integer.parseInt(read.readLine());	// Here we read the number of columns
 		Battery = mapY + mapX;	// The capacity of the battery is sum of rows and columns
+		Goals = new Point[10];
+		int g = 0;
 		
 		map = new char[mapX][mapY];		// Here we initialize the map which is 2D array
 		actionLeads = -1;
@@ -55,6 +60,7 @@ public class State {
 					initY = y = i;
 				}
 				if(s.charAt(j) == 'T') {		// search about the robot cell by cell then store its position
+					Goals[g++] = new Point(j,i);
 					initGoalX = j;
 					initGoalY = i;
 				}
@@ -85,7 +91,9 @@ public class State {
 		initY = s.initY;
 		initGoalX = s.initGoalX;
 		initGoalY = s.initGoalY;
+		Goals = s.Goals;
 		Battery = s.Battery;
+		reCharged = s.reCharged;
 	}
 	
 	// -----------------------------
@@ -113,7 +121,7 @@ public class State {
 	// METHOD THAT TELLS WHETHER THIS STATE IS EQUAL
 	// TO ANOTHER STATE.
 	public boolean equal(State s) {
-		return ((x==s.x)&&(y==s.y)&&(z==s.z)&&(map.equals(s.map)));
+		return ((x==s.x)&&(y==s.y)&&(z==s.z)&&(map.equals(s.map)&&(reCharged==s.reCharged)));
 	}
 	
 	// -----------------------------
@@ -193,9 +201,9 @@ public class State {
 		public boolean reCharge() {
 			if(map[x][y] == 'C') {				// if Robot on the station then charge will done
 				Battery = mapX + mapY;
+				reCharged = 1;
 				return true;
 			}
-			Battery--;								// if charge used in wrong place will decrease the battery
 			return false;	
 		}
 	
@@ -227,7 +235,7 @@ public class State {
 												// if the action returns true then log DONE
 												// else if the action returns false then log FAIL
 		String log = "ERROR";
-		if (Battery <= 0)
+		if (Battery < 0)
 			log = "NO BATTERY";
 		else {
 			switch (cmd) {
@@ -268,6 +276,7 @@ public class State {
 				break;
 			}
 		}
+		
 		return log;
 	}
         
@@ -315,8 +324,8 @@ public class State {
 			map[x][y] = 'X';
 		else if(map[x][y] == 'Y')
 			map[x][y] = 'Z';
-		else if(map[x][y] == 'C')
-			map[x][y] = 'D';
+//		else if(map[x][y] == 'C')
+//			map[x][y] = 'D';
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(finalMapFile)); //buffer to write into finalMapFile
 		for(int i = 0; i<mapY; i++) {
@@ -327,10 +336,6 @@ public class State {
 		}
 		writer.append("Robot Position -> (" + x + ", " + y + ")");
 		writer.close();
-	}
-	
-	public void writeActionsFile(String actionsFile, State init) throws IOException{
-		
 	}
 
 	
@@ -403,6 +408,18 @@ public class State {
 	}
 	public int getInitGoalY() {
 		return initGoalY;
+	}
+	public Point getNearestGoal() {
+		int i = 1;
+		Point current = new Point(x,y);
+		Point minPoint = Goals[0];
+		while(Goals[i] != null) {
+			if(current.distance(Goals[i]) < current.distance(minPoint)){
+				minPoint = Goals[i];
+			}
+			i++;
+		}
+		return minPoint;
 	}
 		
 }

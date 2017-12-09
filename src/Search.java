@@ -63,7 +63,7 @@ public class Search {
 	private boolean visited(Node n) {
 		for (int i=0; i<n_closed; i++) {
 			// ...
-			if (closed[i].equals(n))  // change this
+			if (closed[i].hasSameState(n))  // change this
 				return true;
 		}
 		return false;
@@ -88,36 +88,62 @@ public class Search {
 	// THIS METHOD WILL DO THE SEARCH AND CAN
 	// RETURN THE GOAL NODE. YOU CAN EXTRACT
 	// THE SOLUTION BY FOLLOWING THE PARENT NODES	
-	public Node doSearch() {
-	
+	public Node doSearch(int na) {
+
 		numNodesExpanded = 0;
 		Node nodesList[];
 		Node current = root;
 		initialize_closed();
-	
-		fringe.add(current);		
-		while (!fringe.isEmpty()) {
-			current = fringe.remove();
 
-			if (current.isGoal()) {
-				return current;	
+		if (na == 1 || na == 2) {
+			if(na == 2) {
+				Comparator<Node> comparator = new MDComprator();
+				fringe = new PriorityQueue<>(comparator);
 			}
-			mark_as_visited(current);
-			nodesList = current.expand();
-			numNodesExpanded++;			
-			for (int i=0; i<5; i++) {	// we have 5 actions
-				// ...
-				if (nodesList[i]!=null){
-					if(!visited(nodesList[i])){
-						fringe.add(current = nodesList[i]);
-						
+			fringe.add(current);
+
+			while (!fringe.isEmpty()) {
+				current = fringe.remove();
+
+				if (current.isGoal()) {
+					return current;
+				}
+				mark_as_visited(current);
+				nodesList = current.expand();
+				numNodesExpanded++;
+				System.out.println("Battery: " + current.state.Battery + ", MapX&Y: [" + current.state.map[current.state.x][current.state.y]+"] ---> " + current.state.reCharged);
+				for (int i = 0; i < 5; i++) { // we have 5 actions
+					if (nodesList[i] != null) {
+						System.out.print(nodesList[i].getAction());
+						if(nodesList[4]!=null)
+							System.out.print(" {"+nodesList[4].state.Battery+"} ");
+						if (!visited(nodesList[i])) {
+							fringe.add(current = nodesList[i]);
+							System.out.print(", Action: " + current.getAction() + "| ");
+						}
+					}
+					// ...
+				}
+			}
+		} else if(na == 3) {
+			Node checker = current;
+			do {
+				checker = current;
+				nodesList = current.expand();
+				for(int i = 0; i < 5; i++) {
+					if(nodesList[i] != null) {
+						System.out.print(nodesList[i].getAction());
+						if(nodesList[i].h_md() < current.h_md()) {
+							System.out.print(", Action: " + nodesList[i].getAction());
+							current = nodesList[i];
+						}
 					}
 				}
-					// ...
-			}			
+				System.out.println();
+			}while(current != checker);
 		}
-		return null;	// goal not found
-		
+		return null; // goal not found
+
 	}
 
 	
@@ -169,7 +195,7 @@ public class Search {
 			writer.append(sol[i]);
 			writer.newLine();
 			s.doCommandAndLog(sol[i]);
-			System.out.println(sol[i]);
+			System.out.println(sol[i] + " [" + (i+1) + "]");
 		}
 		}
 		writer.close();

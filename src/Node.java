@@ -10,7 +10,7 @@ import java.util.*;
 
 class Node{
 	public State state;	// the state
-	private Node parent;	// the parent node
+	public Node parent;	// the parent node
 	private int action;	// the number of the action 
 				// that lead to this state
 	public int path_cost;	// the cost spent so far to reach this node
@@ -57,8 +57,7 @@ class Node{
 	
 	// MANHATTAN DISTANCE HEURISTIC
 	public int h_md() {
-		
-		return Math.abs(state.getInitX() - state.getInitGoalX()) + Math.abs(state.getInitY() - state.getInitGoalY());
+		return Math.abs(state.getX() - state.getInitGoalX()) + Math.abs(state.getY() - state.getInitGoalY());
 	}
 	
 	// DISPLAY THE NODE'S INFO
