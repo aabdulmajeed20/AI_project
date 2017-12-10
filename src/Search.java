@@ -111,7 +111,7 @@ public class Search {
 				mark_as_visited(current);
 				nodesList = current.expand();
 				numNodesExpanded++;
-				System.out.println("Battery: " + current.state.Battery + ", MapX&Y: [" + current.state.map[current.state.x][current.state.y]+"] ---> " + current.state.reCharged);
+				System.out.println("Battery: " + current.state.Battery + ", MapX&Y: [" + current.state.map[current.state.x][current.state.y]+"] ---> " + " [" + current.state.getNearestGoal().x + ", " + current.state.getNearestGoal().y + "]");
 				for (int i = 0; i < 5; i++) { // we have 5 actions
 					if (nodesList[i] != null) {
 						System.out.print(nodesList[i].getAction());
